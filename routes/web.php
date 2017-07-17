@@ -14,13 +14,17 @@ use Illuminate\Support\Facades\Redis;
 */
 
 Route::get('/', function () {
-	//Redis::set('name', 'Tino');
-	//return Redis::get('name');
-    //return view('welcome');
-    //return Redis::hget('preferences', 'length');
+	//1. Publish event with Redis (laravel redis publishes even)
+	$data = [
+		'event' => 'UserSignedUp',
+		'data' => [
+			'username' => 'John Doe'
+		]
+	];
+	Redis::Publish('test-channel', json_encode($data));
 
-    //key foo saved  with a value of bar for 10 min
-    Cache::put('foo', 'bar', 10);
+	return view('welcome');
+	//2. node.js +  Redis subscribres to the event (node listens for it)
+	//3. use socket.io to emit to all clients
 
-    return Cache::get('foo');
 });
