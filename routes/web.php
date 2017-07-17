@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Redis;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,5 +14,13 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+	//Redis::set('name', 'Tino');
+	//return Redis::get('name');
+    //return view('welcome');
+    //return Redis::hget('preferences', 'length');
+
+    //key foo saved  with a value of bar for 10 min
+    Cache::put('foo', 'bar', 10);
+
+    return Cache::get('foo');
 });
