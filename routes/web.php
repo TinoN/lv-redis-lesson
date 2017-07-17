@@ -1,6 +1,8 @@
 <?php
 
+use App\Events\UserSignedUp;
 use Illuminate\Support\Facades\Redis;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -15,13 +17,19 @@ use Illuminate\Support\Facades\Redis;
 
 Route::get('/', function () {
 	//1. Publish event with Redis (laravel redis publishes even)
-	$data = [
-		'event' => 'UserSignedUp',
-		'data' => [
-			'username' => 'John Doe'
-		]
-	];
-	Redis::Publish('test-channel', json_encode($data));
+	/** with redis
+		$data = [
+			'event' => 'UserSignedUp',
+			'data' => [
+				'username' => 'John Doe'
+			]
+		];	
+		Redis::Publish('test-channel', json_encode($data));
+	**/
+
+	// with laravel
+	//Event::fire() => event()
+	event(new UserSignedUp(Request::query('name')));
 
 	return view('welcome');
 	//2. node.js +  Redis subscribres to the event (node listens for it)
